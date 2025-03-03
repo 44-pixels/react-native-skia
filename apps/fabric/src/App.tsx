@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { StyleSheet, useWindowDimensions, View } from "react-native";
 import {
   BlurMask,
@@ -73,32 +73,22 @@ const Ring = ({ index, progress }: RingProps) => {
 };
 
 export const Breathe = () => {
-  const { width, height } = useWindowDimensions();
-  const center = useMemo(
-    () => vec(width / 2, height / 2 - 64),
-    [height, width]
-  );
+  const [isVisible, setIsVisible] = useState(false);
 
-  const progress = useLoop({ duration: 3000 });
+  useEffect(() => {
+    setTimeout(() => setIsVisible(true), 1000);
+  }, []);
 
-  const transform = useDerivedValue(
-    () => [{ rotate: mix(progress.value, -Math.PI, 0) }],
-    [progress]
-  );
-
-  return (
-    <View style={{ flex: 1 }}>
-      <Canvas style={styles.container}>
-        <Fill color="rgb(36,43,56)" />
-        <Group origin={center} transform={transform} blendMode="screen">
-          <BlurMask style="solid" blur={40} />
-          {new Array(6).fill(0).map((_, index) => {
-            return <Ring key={index} index={index} progress={progress} />;
-          })}
-        </Group>
-      </Canvas>
-    </View>
-  );
+  return (<View style={{flex: 1, backgroundColor: 'red'}}>
+    {
+      isVisible &&
+      <>
+        <Canvas style={{flex: 1, backgroundColor: "lime"}}>
+          <Circle cx={0} cy={0} color="blue" r={1000} />
+        </Canvas>
+      </>
+    }
+  </View>);
 };
 
 // eslint-disable-next-line import/no-default-export
